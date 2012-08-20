@@ -39,20 +39,23 @@ window.sharejs.extendDoc 'attach_cm', (editor, keepEditorContents) ->
     throw new Error 'Only text documents can be attached to CodeMirror2'
 
   sharedoc = @
-  check = ->
-    window.setTimeout ->
-        editorText = editor.getValue()
-        otText = sharedoc.getText()
+  check = ()->
+      editorText = editor.getValue()
+      otText = sharedoc.getText()
 
-        if editorText != otText
-          console.error "Text does not match!"
-          console.error "editor: #{editorText}"
-          console.error "ot:     #{otText}"
-          # Replace the editor text with the doc snapshot.
-          suppress = true
-          editor.setValue sharedoc.getText()
-          suppress = false
-      , 0
+      if editorText != otText
+        console.error "Text does not match!"
+        console.error "editor: #{editorText}"
+        console.error "ot:     #{otText}"
+        # Replace the editor text with the doc snapshot.
+        suppress = true
+        ###
+        cursor = editor.getCursor()
+        console.log cursor
+        editor.setValue sharedoc.getText()
+        editor.setCursor cursor
+        ###
+        suppress = false
 
   if keepEditorContents
     @del 0, sharedoc.getText().length
